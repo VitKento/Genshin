@@ -1,4 +1,4 @@
 Site para uma amiga
 
 
-[Abrir site](https://seunomeusuario.github.io/nomedorepositorio/)
+[Abrir site](https://vitkento.github.io/Genshin/)
