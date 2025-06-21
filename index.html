@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Derrote as 4</title>
+  <style>
+   body {
+  text-align: center;
+  background-color: #222;
+  color: white;
+  font-family: Arial;
+}
+
+    h1 {
+      margin-top: 20px;
+    }
+    #container {
+      position: relative;
+      display: inline-block;
+    }
+    #boneco {
+      width: 200px;
+      cursor: pointer;
+      transition: transform 0.1s, filter 0.1s;
+    }
+    #boneco:active {
+      transform: scale(0.95);
+    }
+    .dano {
+      filter: brightness(2) saturate(5) hue-rotate(-20deg);
+    }
+
+    #vidaTexto {
+      font-size: 22px;
+      margin: 10px;
+    }
+
+    .vidaBarra {
+      width: 200px;
+      height: 20px;
+      background-color: red;
+      border: 2px solid #fff;
+      margin: 0 auto;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .vidaAtual {
+      background-color: limegreen;
+      height: 100%;
+      width: 100%;
+      transition: width 0.3s;
+    }
+
+    #mensagem {
+      font-size: 24px;
+      color: gold;
+      margin-top: 20px;
+    }
+
+    #final {
+      font-size: 30px;
+      color: cyan;
+      margin-top: 40px;
+    
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Derrote os 4 Inimigos!</h1>
+  <div id="vidaTexto">Vida: 100</div>
+
+  <div class="vidaBarra">
+    <div class="vidaAtual" id="vidaBarra"></div>
+  </div>
+
+  <div id="container">
+    <img src="" id="boneco" onclick="clicarBoneco()" alt="Boneco">
+  </div>
+
+  <div id="mensagem"></div>
+  <div id="final"></div>
+  <div id="finalImagem" style="display: none;">
+  <img src="mavuika.png" style="max-width: 80%;">
+</div>
+
+
+  <!-- Som de hit -->
+  <audio id="somHit" src="https://www.myinstants.com/media/sounds/roblox-death-sound.mp3"></audio>
+<audio id="somFinal" src="vitoria.mp3"></audio>
+  <script>
+    // Lista dos inimigos
+    const inimigos = [
+      {
+        nome: "Yae Miko",
+        vidaMaxima: 70,
+        imagem: "yae.png" ,
+        cenario: "fc4c422f145eb8c8a63577ef49a8a45a.jpg"
+      },
+      {
+        nome: "Clorinde",
+        vidaMaxima: 100,
+        imagem: "clorinde-stickers-with-no-background-v0-x51fg6xlnj3d1.png" ,
+        cenario: "5017d41b0c4346bb8fbb8b186da0248e.png"
+      },
+      {
+        nome: "Furina",
+        vidaMaxima: 200,
+        imagem: "1-1.png" ,
+        cenario: "Archon_Quest_Lies_Cast_Shadows_Under_Gathered_Lights.jpeg"  
+      },
+      {
+        nome: "Raiden Shogun",
+        vidaMaxima: 300,
+        imagem: "tumblr_812033dc73f43f45354b3a8ec65a9f12_b3c7186c_400.png" ,
+        cenario: "7127_1662048986.jpeg"
+      }
+    ];
+
+    let fase = 0;
+    let vida = inimigos[fase].vidaMaxima;
+
+    window.onload = () => {
+      carregarInimigo();
+    };
+
+    function clicarBoneco() {
+  if (vida > 0) {
+    vida -= 10;
+    if (vida < 0) vida = 0;
+
+    atualizarVida();
+    efeitoDano();
+    tocarSom();
+
+    if (vida === 0) {
+      fase++;
+
+      if (fase < inimigos.length) {
+        carregarInimigo(); // Chama a função para carregar o próximo inimigo imediatamente
+      } else {
+            // Fim do jogo
+            document.getElementById('mensagem').innerText = "";
+            document.getElementById('boneco').style.display = "none";
+            document.getElementById('vidaTexto').innerText = "";
+            document.getElementById('vidaBarra').style.width = "0%";
+            document.getElementById('final').innerText = "Não ligue para os outros, seja feliz.";
+            document.getElementById('somFinal').play();
+            // Mostra imagem de vitória
+document.getElementById('finalImagem').style.display = 'block';
+
+          }
+        }
+      }
+    }
+
+    function carregarInimigo() {
+  const inimigo = inimigos[fase];
+  vida = inimigo.vidaMaxima;
+
+  document.getElementById('boneco').src = inimigo.imagem;
+  document.getElementById('boneco').style.display = "block";
+  document.getElementById('mensagem').innerText = `⚔️ ${inimigo.nome} apareceu!`;
+  document.getElementById('final').innerText = "";
+
+  // Muda o cenário
+  document.body.style.backgroundImage = `url('${inimigo.cenario}')`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+
+
+  atualizarVida();
+}
+
+
+    function atualizarVida() {
+      document.getElementById('vidaTexto').innerText = "Vida: " + vida;
+      const porcentagem = (vida / inimigos[fase].vidaMaxima) * 100;
+      document.getElementById('vidaBarra').style.width = porcentagem + "%";
+    }
+
+    function efeitoDano() {
+      const boneco = document.getElementById('boneco');
+      boneco.classList.add('dano');
+      setTimeout(() => {
+        boneco.classList.remove('dano');
+      }, 150);
+    }
+
+    function tocarSom() {
+      const som = document.getElementById('somHit');
+      som.currentTime = 0;
+      som.play();
+    }
+  </script>
+
+</body>
+</html>
